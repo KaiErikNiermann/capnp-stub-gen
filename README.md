@@ -3,8 +3,7 @@
 Generate Python type stubs (.pyi files) from Cap'n Proto schema files.
 
 This tool parses `.capnp` files using pycapnp and generates `.pyi` stub files
-that provide proper type information for Pylance/Pyright, enabling excellent
-IDE support when working with Cap'n Proto in Python.
+that provide proper type information for Pylance/Pyright.
 
 ## Features
 
