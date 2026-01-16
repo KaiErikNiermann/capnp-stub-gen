@@ -112,6 +112,41 @@ struct Project {
 }
 """
 
+# Schema with union types to test Literal which()
+UNION_SCHEMA = """\
+@0xdd3b1fc2f895a41e;
+
+struct Message {
+  union {
+    text @0 :Text;
+    number @1 :Int32;
+    data @2 :Data;
+    empty @3 :Void;
+  }
+}
+
+struct Result {
+  union {
+    success @0 :Text;
+    error @1 :Text;
+  }
+}
+"""
+
+# Schema with const definitions
+CONST_SCHEMA = """\
+@0xef3892a1b4c5d6e7;
+
+const maxSize :UInt32 = 1024;
+const defaultName :Text = "unknown";
+const piValue :Float64 = 3.14159;
+
+struct Config {
+  size @0 :UInt32;
+  name @1 :Text;
+}
+"""
+
 
 @pytest.fixture(scope="session")
 def session_temp_dir() -> Generator[Path]:
@@ -164,4 +199,20 @@ def complex_schema_path(session_temp_dir: Path) -> Path:
     """Create a complex schema file for testing (session-scoped)."""
     schema_path = session_temp_dir / "complex.capnp"
     schema_path.write_text(COMPLEX_SCHEMA)
+    return schema_path
+
+
+@pytest.fixture(scope="session")
+def union_schema_path(session_temp_dir: Path) -> Path:
+    """Create a schema file with unions for testing Literal which() (session-scoped)."""
+    schema_path = session_temp_dir / "union.capnp"
+    schema_path.write_text(UNION_SCHEMA)
+    return schema_path
+
+
+@pytest.fixture(scope="session")
+def const_schema_path(session_temp_dir: Path) -> Path:
+    """Create a schema file with const definitions for testing (session-scoped)."""
+    schema_path = session_temp_dir / "consts.capnp"
+    schema_path.write_text(CONST_SCHEMA)
     return schema_path

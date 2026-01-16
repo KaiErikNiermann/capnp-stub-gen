@@ -89,8 +89,11 @@ class TestStubGeneratorSimpleSchema:
         result = generator.generate_stub()
 
         assert "def new_message() -> PersonBuilder:" in result
-        assert "def from_bytes(data: bytes) -> PersonReader:" in result
-        assert "def from_bytes_packed(data: bytes) -> PersonReader:" in result
+        # from_bytes is now a context manager returning Iterator
+        assert "def from_bytes(" in result
+        assert ") -> Iterator[PersonReader]:" in result
+        assert "@contextmanager" in result
+        assert "def from_bytes_packed(" in result
 
 
 class TestStubGeneratorEnumSchema:
@@ -247,3 +250,92 @@ class TestStubGeneratorClassName:
     def test_make_class_name_mixed(self) -> None:
         """Mixed separators should be handled."""
         assert StubGenerator._make_class_name("my-complex_schema") == "MyComplexSchemaSchema"
+
+
+class TestStubGeneratorUnionSchema:
+    """Tests for generating stubs with union types and Literal which()."""
+
+    def test_union_which_has_literal_return(self, union_schema_path: Path) -> None:
+        """Union structs should have which() returning Literal with field names."""
+        generator = StubGenerator(union_schema_path)
+        result = generator.generate_stub()
+
+        # Message union should have all 4 fields in Literal
+        assert 'def which(self) -> Literal["text", "number", "data", "empty"]' in result
+
+    def test_result_union_which_type(self, union_schema_path: Path) -> None:
+        """Result union should have which() with success and error."""
+        generator = StubGenerator(union_schema_path)
+        result = generator.generate_stub()
+
+        assert 'Literal["success", "error"]' in result
+
+
+class TestStubGeneratorBuilderMethods:
+    """Tests for enhanced Builder class methods."""
+
+    def test_builder_has_to_segments(self, simple_schema_path: Path) -> None:
+        """Builder should have to_segments method."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "def to_segments(self) -> list[bytes]:" in result
+
+    def test_builder_has_write_methods(self, simple_schema_path: Path) -> None:
+        """Builder should have write and write_packed methods."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "def write(self, file: BufferedWriter) -> None:" in result
+        assert "def write_packed(self, file: BufferedWriter) -> None:" in result
+
+    def test_imports_buffered_writer(self, simple_schema_path: Path) -> None:
+        """Stub should import BufferedWriter."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "from io import BufferedWriter" in result
+
+
+class TestStubGeneratorInitOverloads:
+    """Tests for typed init() method overloads."""
+
+    def test_init_overloads_for_list_fields(self, complex_schema_path: Path) -> None:
+        """Init overloads should be generated for list fields."""
+        generator = StubGenerator(complex_schema_path)
+        result = generator.generate_stub()
+
+        # Task struct has subtasks (List(Task)) and tags (List(Text))
+        assert 'def init(self, name: Literal["subtasks"])' in result
+        assert 'def init(self, name: Literal["tags"])' in result
+        # Project has tasks (List(Task)) and members (List(User))
+        assert 'def init(self, name: Literal["tasks"])' in result
+        assert 'def init(self, name: Literal["members"])' in result
+
+    def test_init_fallback_overloads(self, simple_schema_path: Path) -> None:
+        """Should always have fallback init overloads with str."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "def init(self, name: str) -> Any:" in result
+        assert "def init(self, name: str, size: int) -> Any:" in result
+
+
+class TestStubGeneratorFromBytesContextManager:
+    """Tests for from_bytes as context manager."""
+
+    def test_from_bytes_returns_iterator(self, simple_schema_path: Path) -> None:
+        """from_bytes should return Iterator as it's a context manager."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "Iterator[PersonReader]" in result
+        assert "@contextmanager" in result
+
+    def test_from_bytes_has_optional_params(self, simple_schema_path: Path) -> None:
+        """from_bytes should have traversal_limit and nesting_limit params."""
+        generator = StubGenerator(simple_schema_path)
+        result = generator.generate_stub()
+
+        assert "traversal_limit_in_words: int | None" in result
+        assert "nesting_limit: int | None" in result
