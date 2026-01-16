@@ -1,0 +1,98 @@
+[project]
+name = "capnp-stub-gen"
+version = "0.1.0"
+description = "Generate Python type stubs from Cap'n Proto schema files"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.14"
+keywords = ["capnp", "capnproto", "stubs", "typing", "pyi", "type-hints"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "pycapnp>=2.0.0",
+    "typer>=0.15.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "pyright>=1.1.0",
+    "ruff>=0.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/capnp-stub-gen"
+Repository = "https://github.com/yourusername/capnp-stub-gen"
+Issues = "https://github.com/yourusername/capnp-stub-gen/issues"
+
+[project.scripts]
+capnp-stub-gen = "capnp_stub_gen.cli:app"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "capnp-stub-gen"
+version = "0.1.0"
+description = "Generate Python type stubs from Cap'n Proto schema files"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "capnp_stub_gen", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.14"
+pycapnp = ">=2.0.0"
+typer = ">=0.15.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0.0"
+pytest-cov = ">=6.0.0"
+pyright = ">=1.1.0"
+ruff = ">=0.8.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v --tb=short"
+
+[tool.pyright]
+pythonVersion = "3.14"
+typeCheckingMode = "strict"
+include = ["src"]
+exclude = ["tests"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.coverage.run]
+source = ["src/capnp_stub_gen"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "@overload",
+    "raise NotImplementedError",
+]
