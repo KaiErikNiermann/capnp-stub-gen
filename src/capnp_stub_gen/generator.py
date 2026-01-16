@@ -520,8 +520,15 @@ class StubGenerator:
         buffer.write("This module loads the schema at import time and provides typed access.\n")
         buffer.write('"""\n\n')
         buffer.write("from __future__ import annotations\n\n")
+        # Add pathlib import if proto_import_path uses Path
+        if "Path(" in proto_import_path:
+            buffer.write("from pathlib import Path\n\n")
         buffer.write("import capnp as _capnp\n\n")
-        buffer.write(f"_SCHEMA_PATH = {proto_import_path}\n\n")
+        # Wrap in str() if proto_import_path is a Path expression (pycapnp requires str)
+        if "Path(" in proto_import_path:
+            buffer.write(f"_SCHEMA_PATH = str({proto_import_path})\n\n")
+        else:
+            buffer.write(f"_SCHEMA_PATH = {proto_import_path}\n\n")
         buffer.write("# Load schema at module import\n")
         buffer.write("_schema = _capnp.load(_SCHEMA_PATH)\n\n")
         buffer.write("# Re-export all types\n")
