@@ -1,8 +1,9 @@
 [project]
 name = "capnp-stub-gen"
-version = "0.1.1"
+version = "0.0.0"
+dynamic = ["version"]
 description = "Generate Python type stubs from Cap'n Proto schema files"
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "KaiErikNiermann", email = "kai.niermann@gmail.com" }]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -33,20 +34,29 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/capnp-stub-gen"
-Repository = "https://github.com/yourusername/capnp-stub-gen"
-Issues = "https://github.com/yourusername/capnp-stub-gen/issues"
+Homepage = "https://github.com/KaiErikNiermann/capnp-stub-gen"
+Repository = "https://github.com/KaiErikNiermann/capnp-stub-gen"
+Issues = "https://github.com/KaiErikNiermann/capnp-stub-gen/issues"
 
 [project.scripts]
 capnp-stub-gen = "capnp_stub_gen.cli:app"
 
 [build-system]
-requires = ["poetry-core>=2.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=2.0.0", "poetry-dynamic-versioning>=1.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+pattern = "^v?(?P<base>\\d+\\.\\d+\\.\\d+)(-?((?P<stage>[a-zA-Z]+)\\.?(?P<revision>\\d+)?))?$"
+
+[tool.poetry-dynamic-versioning.substitution]
+files = ["src/capnp_stub_gen/__init__.py"]
 
 [tool.poetry]
 name = "capnp-stub-gen"
-version = "0.1.0"
+version = "0.0.0"
 description = "Generate Python type stubs from Cap'n Proto schema files"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"

@@ -8,7 +8,7 @@ from __future__ import annotations
 from capnp_stub_gen.generator import StubGenerator
 from capnp_stub_gen.types import CAPNP_TYPE_TO_PYTHON, CapnpElementType, CapnpFieldType
 
-__version__ = "0.1.0"
+__version__ = "0.0.0"  # Will be set by poetry-dynamic-versioning
 __all__ = [
     "CAPNP_TYPE_TO_PYTHON",
     "CapnpElementType",
