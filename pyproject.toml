@@ -1,6 +1,6 @@
 [project]
 name = "capnp-stub-gen"
-version = "0.1.0"
+version = "0.1.1"
 description = "Generate Python type stubs from Cap'n Proto schema files"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 license = "MIT"
