@@ -1,6 +1,6 @@
 [project]
 name = "capnp-stub-gen"
-version = "0.0.0"
+version = "0.0.2"
 dynamic = ["version"]
 description = "Generate Python type stubs from Cap'n Proto schema files"
 authors = [{ name = "KaiErikNiermann", email = "kai.niermann@gmail.com" }]
@@ -56,9 +56,9 @@ files = ["src/capnp_stub_gen/__init__.py"]
 
 [tool.poetry]
 name = "capnp-stub-gen"
-version = "0.0.0"
+version = "0.0.2"
 description = "Generate Python type stubs from Cap'n Proto schema files"
-authors = ["Your Name <you@example.com>"]
+authors = ["KaiErikNiermann <kai.niermann@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "capnp_stub_gen", from = "src" }]
