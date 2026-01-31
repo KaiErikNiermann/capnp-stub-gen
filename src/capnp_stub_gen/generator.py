@@ -39,7 +39,9 @@ class StubGenerator:
         self._struct_names: list[str] = []
         self._enum_names: list[str] = []
         self._const_names: list[tuple[str, str, Any]] = []  # (name, py_type, value)
-        self._struct_fields: dict[str, list[tuple[str, str, bool]]] = {}  # struct -> [(field, type, is_union)]
+        self._struct_fields: dict[
+            str, list[tuple[str, str, bool]]
+        ] = {}  # struct -> [(field, type, is_union)]
         self._struct_union_fields: dict[str, list[str]] = {}  # struct -> [union field names]
 
     @property
@@ -372,7 +374,9 @@ class StubGenerator:
                 out.write(f'    def init(self, name: Literal["{field_name}"]) -> {return_type}:\n')
                 out.write("        ...\n\n")
                 out.write("    @overload\n")
-                out.write(f'    def init(self, name: Literal["{field_name}"], size: int) -> {return_type}:\n')
+                out.write(
+                    f'    def init(self, name: Literal["{field_name}"], size: int) -> {return_type}:\n'
+                )
                 out.write("        ...\n\n")
 
         # Always write the catch-all overload
